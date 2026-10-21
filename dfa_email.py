@@ -7,21 +7,21 @@ def validasi_email(email):
     q4 = "q4"  # Titik setelah domain
     q5 = "q5"  # Satu huruf ekstensi
     q6 = "q6"  # Minimal dua huruf ekstensi
-    qd = "qd"  # Dead state
+    qd = "DEAD"  # Dead state
 
     state = q0
+    alur = [q0]
 
     # Membaca input satu karakter demi satu karakter
     for karakter in email:
-
         if state == q0:
-            if karakter.isalnum():
+            if karakter.isascii() and karakter.isalnum():
                 state = q1
             else:
                 state = qd
 
         elif state == q1:
-            if karakter.isalnum():
+            if karakter.isascii() and karakter.isalnum():
                 state = q1
             elif karakter == "@":
                 state = q2
@@ -29,13 +29,13 @@ def validasi_email(email):
                 state = qd
 
         elif state == q2:
-            if karakter.isalnum():
+            if karakter.isascii() and karakter.isalnum():
                 state = q3
             else:
                 state = qd
 
         elif state == q3:
-            if karakter.isalnum():
+            if karakter.isascii() and karakter.isalnum():
                 state = q3
             elif karakter == ".":
                 state = q4
@@ -43,19 +43,19 @@ def validasi_email(email):
                 state = qd
 
         elif state == q4:
-            if karakter.isalpha():
+            if karakter.isascii() and karakter.isalpha():
                 state = q5
             else:
                 state = qd
 
         elif state == q5:
-            if karakter.isalpha():
+            if karakter.isascii() and karakter.isalpha():
                 state = q6
             else:
                 state = qd
 
         elif state == q6:
-            if karakter.isalpha():
+            if karakter.isascii() and karakter.isalpha():
                 state = q6
             else:
                 state = qd
@@ -63,17 +63,23 @@ def validasi_email(email):
         elif state == qd:
             state = qd
 
-    # Menentukan apakah input diterima atau ditolak
+        # Menyimpan setiap perpindahan state
+        alur.append(state)
+
+    # Menentukan hasil validasi
     if state == q6:
-        return "VALID (ACCEPT)"
+        hasil = "VALID (ACCEPT)"
     else:
-        return "TIDAK VALID (REJECT)"
+        hasil = "TIDAK VALID (REJECT)"
+
+    return hasil, alur
 
 
 # Input email dari pengguna
 email = input("Masukkan alamat email: ")
 
 # Validasi dan tampilkan hasil
-hasil = validasi_email(email)
+hasil, alur = validasi_email(email)
 
 print("Hasil validasi:", hasil)
+print("Alur string:", " -> ".join(alur))
